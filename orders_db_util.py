@@ -64,7 +64,11 @@ def query_orders_existed(openId,start_time):
 # 更新指定用户的指定属性值
 def update_orders_data(openId,start_time,key,value):
     try:
+<<<<<<< HEAD
         cur.execute('update orders set '+key+'= "{0}" where openId = "{1}" and start_time = "{2}" '\
+=======
+        res = cur.execute('update orders set '+key+'= "{0}" where openId = "{1}" and start_time = "{2}" '\
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
                     .format(value,openId,start_time))
     except Exception as err:
         print(err)
@@ -81,11 +85,15 @@ def get_one_order_from_db(openId):
     cur.execute('select * from orders where openId = "{0}" and cur_state = "{1}" '.format(openId,3))
     query_result = cur.fetchone()
     print('query_result:',query_result)
+<<<<<<< HEAD
     if query_result is None:
         print('此用户无历史订单')
         return res_to_wx 
     assert( len(db_attributes_list) == len(query_result) )
     
+=======
+    assert( len(db_attributes_list) == len(query_result) )
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
     print('====*-*====')
     dic_list = zip(db_attributes_list, query_result)
     for key,value in dic_list:

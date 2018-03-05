@@ -165,7 +165,11 @@ class WxProtocol(WebSocketServerProtocol):
             # 操作二：=============预订车位操作============================
             elif operation == 'carID':
                 value = int(value)
+<<<<<<< HEAD
                 if self.balance > 0 :
+=======
+                if self.balance >= 0 :
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
                     if eval(search_from_ps_db(value,'occupied')) == True: # 已经被占
                         # 看看是不是这个用户占的
                         if value == search_ucs_openId_to_carID(self.openid,'carID'):
@@ -220,8 +224,11 @@ class WxProtocol(WebSocketServerProtocol):
             # 操作四：================历史订单========================
             elif operation == 'askOrder':
                 result = get_history_orders(self.openid)
+<<<<<<< HEAD
                 print("result:----------------->")
                 print(result)
+=======
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
                 if result:
                     res = {}
                     res['header'] = 'his_order'
@@ -311,12 +318,20 @@ class WxProtocol(WebSocketServerProtocol):
         res = get_one_order_from_db(self.openid)
         res['header'] = 'timer_stop'
         res['balance'] = search_from_user_db(self.openid,'balance')# 零钱
+<<<<<<< HEAD
         #time.sleep(2)
+=======
+        time.sleep(2)
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
         res = json.dumps(res)
         self.sendMessage(res.encode())
         update_user_data(self.openid,'cur_state',0)
         update_all_finished_order(self.openid)
+<<<<<<< HEAD
         print('历史订单发送成功...')
+=======
+        print('历史未发送订单发送成功...')
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
 
     def onConnect(self,request):
         print('client from %s'% request.peer)
@@ -326,19 +341,27 @@ class WxProtocol(WebSocketServerProtocol):
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {0}".format(reason))
+<<<<<<< HEAD
         try:
             del carID_to_Wx[self.carID] 
         except Exception as identifier:
             pass
         print('与用户连接断开...')
         
+=======
+
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
 # 和停车位的连接协议
 class ArmProtocol(po.Protocol):
     def __init__(self):
         self.carID = -1             # 停车位号
         self.openning = False       # 是否允许被占用
         self.occupied = False       # 是否被占用
+<<<<<<< HEAD
         self.start_time = '-'      # 开始计时的时刻
+=======
+        self.start_time = ''      # 开始计时的时刻
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
         
     # 将数据库里的信息装填进来
     def Fill(self,carID):
@@ -378,18 +401,29 @@ class ArmProtocol(po.Protocol):
         msg['cost'] = cost_money
         msg['last_time'] = sec
         msg['current_time'] = stop_Time
+<<<<<<< HEAD
         msg['balance'] = balance
+=======
+        msg['current_money'] = balance
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
         msg = json.dumps(msg)
 
         user_state = 0 # 订单完成
         try:
+<<<<<<< HEAD
             print(carID_to_Wx[self.carID].Data,'还活着')
+=======
+            print(carID_to_Wx[self.carID].Data['userInfo']['nickName'],'还活着')
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
             carID_to_Wx[self.carID].sendMessage(msg.encode())
             print('%d号车位已空...' % self.carID)
         except Exception as err:
             # ++++++++++++++++和用户的连接断开了++++++++++++++++
             user_state = 3 # 订单完成但没发数据
+<<<<<<< HEAD
             print(err)
+=======
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
             print('和用户连接断开...发送订单完成信息失败')
             # ++++++++++++++++++存入数据库++++++++++++++++++++
             
@@ -400,6 +434,7 @@ class ArmProtocol(po.Protocol):
         #=====更新状态=======
 
         #-----order状态------
+<<<<<<< HEAD
         # st是start_time
         st = search_from_user_db(openid,'start_time')
         a=update_orders_data(openid,st,'cur_state',user_state)
@@ -415,6 +450,14 @@ class ArmProtocol(po.Protocol):
         print(openid,st)
         
         #print(a,b,c,d,e)
+=======
+        update_orders_data(openid,self.start_time,'cur_state',user_state)
+        update_user_data(openid,'cur_state',user_state)
+        print('cur_state更新成功为',user_state)
+        update_orders_data(openid,self.start_time,'stop_time',stop_Time)
+        update_orders_data(openid,self.start_time,'last_time',sec)
+        update_orders_data(openid,self.start_time,'cost',cost_money)
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
         #-------------------
 
         a=update_user_data(openid, 'balance',balance) #更新余额
@@ -446,12 +489,19 @@ class ArmProtocol(po.Protocol):
             msg['time'] = self.start_time
             msg = json.dumps(msg)
             try:
+<<<<<<< HEAD
                 print(carID_to_Wx[self.carID].Data,'还活着')
+=======
+                print(carID_to_Wx[self.carID].Data['userInfo']['nickName'],'还活着')
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
                 carID_to_Wx[self.carID].sendMessage(msg.encode())
                 carID_to_Wx[self.carID].cur_state = 2
                 print('%d号车位被占...' % self.carID )
             except Exception as err:
+<<<<<<< HEAD
                 print(err)
+=======
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
                 print('和wx用户连接断开...')
                 #+++++++++和微信的连接断开了+++++++++++
                 pass
@@ -486,10 +536,17 @@ class ArmProtocol(po.Protocol):
     # 当接收到数据的时候，会调用这个函数
     def dataReceived(self,data):
         #self.transport.write(data)
+<<<<<<< HEAD
         data = data.decode('utf-8')
         #print('pre:',data)
         #print(type(data))
         #==============>data = armDecry(data)
+=======
+        #data = data.decode('utf-8')
+        #print('pre:',data)
+        #print(type(data))
+        data = armDecry(data)
+>>>>>>> 4af6067e442ce1217930abd63a62a1d757df1851
         #print(data)
         #print(type(data))
         ps_state, carID = data.split()
